@@ -4,7 +4,6 @@ const puppeteer = require('puppeteer');
 const app = express();
 const port = 3000;
 
-// Define your main function as an async function
 async function yourMainFunction() {
     const browser = await puppeteer.launch({
         executablePath: '/opt/render/project/.render/chrome/opt/google/chrome/google-chrome',
@@ -25,15 +24,26 @@ async function yourMainFunction() {
     return title;
 }
 
-// Define a route to trigger the Puppeteer script
-app.get('/run-puppeteer', async (req, res) => {
-    try {
-        const title = await yourMainFunction();
-        res.send(`Page title: ${title}`);
-    } catch (error) {
-        console.error("An error occurred: ", error);
-        res.status(500).send('An error occurred while running Puppeteer');
+// Function to run the Puppeteer script in an infinite loop
+(async () => {
+    while (true) {
+        try {
+            await yourMainFunction();
+        } catch (error) {
+            console.error("An error occurred: ", error);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for 1 second before rerunning
     }
+})();
+
+// Express server to serve status or other endpoints
+app.get('/', (req, res) => {
+    res.send('Puppeteer script is running continuously!');
+});
+
+// Additional endpoints (if needed)
+app.get('/status', (req, res) => {
+    res.send('Puppeteer is still running!');
 });
 
 // Start the Express server
