@@ -7,7 +7,7 @@ let page; // Declare page at a higher scope
 async function launchBrowser() {
     const browser = await puppeteer.launch({
         headless: true, // Set to true if you want to run in headless mode
-        executablePath: '/opt/render/project/.render/chrome/opt/google/chrome',
+        executablePath: '/opt/render/project/.render/chrome/opt/google/chrome/google-chrome',
         args: ['--no-sandbox']
     });
     console.log('Browser launched');
